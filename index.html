@@ -100,6 +100,23 @@ p { margin: 0; }
 .btn.primary:hover { background: color-mix(in srgb, var(--accent) 88%, white); }
 .btn svg { width: 1em; height: 1em; }
 
+/* portrait + readout stack */
+.hero-side { display: grid; gap: 0; min-width: 0; max-width: 26rem; width: 100%; }
+@media (min-width: 960px) { .hero-side { justify-self: end; } }
+.portrait {
+  position: relative; margin: 0; aspect-ratio: 4 / 5; max-width: 100%;
+  border-radius: 10px; overflow: hidden; border: 1px solid var(--line);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--line) 45%, transparent) 10px 11px),
+    var(--surface);
+}
+.portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.15) contrast(1.03); }
+.portrait-fallback { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: .4rem; }
+.portrait-fallback b { font-family: var(--font-display); font-size: 3.5rem; font-weight: 800; letter-spacing: -0.04em; color: var(--fg); line-height: 1; }
+.portrait-fallback span { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); }
+.hero-side .readout { position: relative; z-index: 1; margin: -3.25rem 1rem 0; box-shadow: 0 18px 40px -18px rgb(0 0 0 / .7); }
+@media (min-width: 960px) { .hero-side .readout { margin: -4rem 0 0 -3rem; } }
+
 /* status readout: the one terminal moment on the page */
 .readout { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; font-family: var(--font-mono); font-size: .78rem; line-height: 1.75; min-width: 0; }
 .readout-bar { display: flex; gap: .4rem; padding: .7rem .9rem; border-bottom: 1px solid var(--line); color: var(--muted); align-items: center; }
@@ -253,6 +270,12 @@ footer a:hover { color: var(--accent); }
         </div>
       </div>
 
+      <div class="hero-side">
+      <figure class="portrait">
+        <div class="portrait-fallback" aria-hidden="true"><b>GK</b><span>photo.jpg</span></div>
+        <!-- Replace photo.jpg with your portrait (4:5 crop works best) -->
+        <img src="photo.jpg" alt="Portrait of Ghassen Kahri" width="800" height="1000" onerror="this.hidden=true">
+      </figure>
       <figure class="readout" aria-label="Status summary styled as a kubectl command">
         <div class="readout-bar" aria-hidden="true"><i></i><i></i><i></i><span>zsh — tunis</span></div>
 <pre><span class="p">$</span> kubectl get engineer ghassen -o wide
@@ -265,6 +288,7 @@ ghassen   <span class="ok">Available</span>   tn (UTC+1)    4y    spring,angular
   platform     Kubernetes · Terraform · CI/CD
   next         DevSecOps · LLM / RAG</pre>
       </figure>
+      </div>
     </div>
   </section>
 
@@ -272,11 +296,12 @@ ghassen   <span class="ok">Available</span>   tn (UTC+1)    4y    spring,angular
     <div class="wrap block-grid">
       <p class="label"><b>01</b> / about</p>
       <div>
-        <h2 id="about-title">Code that someone else can run at 3 a.m.</h2>
+        <h2 id="about-title">Full stack, end to end.</h2>
         <div class="prose">
-          <p>I'm a full-stack engineer from Tunis with a computer engineering degree and a habit of following my code all the way to production. On most teams I've joined, I've taken a ticket from sprint planning through to deployment: the Spring Boot service, the Angular screen, the Terraform change and the Kubernetes rollout.</p>
-          <p>My philosophy is simple. Pick the <em>boring architecture that fits the budget</em>, keep domain logic separate from infrastructure, and make every sensitive action traceable. That's why I've refactored a marketplace from microservices back to a monolith when the client couldn't justify a cluster, and why I like hash-chained audit trails in regulated domains.</p>
-          <p>Right now I'm deepening the security side of DevOps and putting LLMs to practical use. At work I shipped a GPT-4 pipeline that turns lab reports into validated JSON, and I use Claude Code daily in my own workflow.</p>
+          <p>I'm a full-stack software engineer with a national engineering degree in computer science and four years of production work for clients in France, the US and Germany.</p>
+          <p>I build across the whole application, mostly with Java, Spring Boot and Angular, and adapt quickly to new stacks. I design hexagonal microservices and pick how they talk based on the problem: REST or gRPC, Kafka or RabbitMQ events, WebSockets for real time. Sagas, circuit breakers and SQL or NoSQL storage are part of the toolkit, and <em>security is built in from the first commit</em>, from authentication to signed, traceable data.</p>
+          <p>I also own the path to production: CI/CD pipelines, Terraform, Ansible and Kubernetes, down to Linux servers (Debian, Red Hat, CentOS) behind Nginx and HAProxy.</p>
+          <p>In Scrum teams, I take part in sprint planning and carry each ticket from refinement to deployment. Knowing every layer, from the UI to the load balancer, lets me deliver features end to end without handing them off halfway.</p>
         </div>
         <dl class="facts">
           <div class="fact"><dt>Experience</dt><dd>4<small>years</small></dd></div>
@@ -296,7 +321,7 @@ ghassen   <span class="ok">Available</span>   tn (UTC+1)    4y    spring,angular
           <div class="skill-group">
             <h3>Languages <span>code</span></h3>
             <ul class="tags">
-              <li class="daily">Java</li><li class="daily">TypeScript</li><li class="daily">SQL</li><li>Bash</li><li>Python (scripting)</li>
+              <li class="daily">Java</li><li class="daily">TypeScript</li><li class="daily">SQL</li><li>Python (scripting)</li>
             </ul>
           </div>
           <div class="skill-group">
@@ -308,13 +333,25 @@ ghassen   <span class="ok">Available</span>   tn (UTC+1)    4y    spring,angular
           <div class="skill-group">
             <h3>Architecture &amp; messaging <span>design</span></h3>
             <ul class="tags">
-              <li>Hexagonal / DDD</li><li>Microservices</li><li>Kafka</li><li>RabbitMQ</li><li>REST</li><li>WebSocket</li><li>SAGA · CQRS</li>
+              <li>Hexagonal / DDD</li><li>Microservices</li><li>REST</li><li>gRPC</li><li>Kafka</li><li>RabbitMQ</li><li>WebSocket</li><li>SAGA · CQRS</li><li>Circuit breaker</li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3>Databases <span>data</span></h3>
+            <ul class="tags">
+              <li class="daily">PostgreSQL</li><li>SQL modelling</li><li>NoSQL</li>
             </ul>
           </div>
           <div class="skill-group">
             <h3>Infrastructure &amp; DevOps <span>platform</span></h3>
             <ul class="tags">
-              <li class="daily">Kubernetes</li><li>AWS EKS</li><li class="daily">Docker</li><li class="daily">Terraform</li><li>Ansible</li><li>CI/CD</li><li>Nginx</li><li>Linux &amp; networking</li>
+              <li class="daily">Kubernetes</li><li>AWS EKS</li><li class="daily">Docker</li><li class="daily">Terraform</li><li>Ansible</li><li>CI/CD pipelines</li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3>Servers &amp; networking <span>ops</span></h3>
+            <ul class="tags">
+              <li>Debian</li><li>Red Hat</li><li>CentOS</li><li>Nginx</li><li>HAProxy</li><li>Bash</li><li>Networking</li>
             </ul>
           </div>
           <div class="skill-group">
@@ -324,9 +361,9 @@ ghassen   <span class="ok">Available</span>   tn (UTC+1)    4y    spring,angular
             </ul>
           </div>
           <div class="skill-group">
-            <h3>AI &amp; tooling <span>leverage</span></h3>
+            <h3>AI, tooling &amp; process <span>delivery</span></h3>
             <ul class="tags">
-              <li>LLM structured extraction</li><li>Computer vision (CNNs)</li><li class="daily">Claude Code</li><li>Git</li><li class="learning">RAG</li>
+              <li class="daily">Scrum / Agile</li><li class="daily">Git</li><li class="daily">Claude Code</li><li>LLM structured extraction</li><li>Computer vision (CNNs)</li><li class="learning">RAG</li>
             </ul>
           </div>
         </div>
